@@ -1,0 +1,41 @@
+id,nom,groupe,categorie,date_partenariat,pays_origine
+1,"Dior","LVMH",luxe,2008-07-22,FR
+2,"Chanel","Chanel",luxe,2003-04-12,FR
+3,"Givenchy","LVMH",luxe,2011-02-16,FR
+4,"Yves Saint Laurent","L'Oreal",luxe,2013-07-12,FR
+5,"Lancome","L'Oreal",luxe,2009-04-22,FR
+6,"Guerlain","LVMH",luxe,2014-07-06,FR
+7,"Hermes Beaute","Hermes",luxe,2004-02-09,FR
+8,"Armani Beauty","L'Oreal",luxe,2020-01-26,IT
+9,"Tom Ford Beauty","Estee Lauder",luxe,2007-12-27,US
+10,"La Mer","Estee Lauder",luxe,2008-04-04,US
+11,"Estee Lauder","Estee Lauder",luxe,2017-05-11,US
+12,"Clinique","Estee Lauder",mass-premium,2016-11-06,US
+13,"MAC Cosmetics","Estee Lauder",mass-premium,2003-12-01,CA
+14,"NARS","Shiseido",mass-premium,2021-06-27,US
+15,"Benefit Cosmetics","LVMH",mass-premium,2016-05-12,US
+16,"Urban Decay","L'Oreal",mass-premium,2012-12-11,US
+17,"Too Faced","Estee Lauder",mass-premium,2018-09-13,US
+18,"Fenty Beauty","LVMH",mass-premium,2016-09-21,US
+19,"Rare Beauty","Independant",indie,2015-12-22,US
+20,"Charlotte Tilbury","Puig",luxe,2013-06-27,UK
+21,"Sephora Collection","LVMH",mass,2022-07-04,FR
+22,"The Ordinary","Estee Lauder",mass,2003-07-24,CA
+23,"CeraVe","L'Oreal",mass,2021-08-21,US
+24,"La Roche-Posay","L'Oreal",mass-premium,2004-08-20,FR
+25,"Drunk Elephant","Shiseido",indie,2018-03-09,US
+26,"Tatcha","Unilever",indie,2022-04-15,US
+27,"Sol de Janeiro","L'Occitane",indie,2006-02-09,BR
+28,"Olaplex","Independant",indie,2007-12-05,US
+29,"K18","Independant",indie,2008-05-11,US
+30,"Augustinus Bader","Independant",luxe,2007-08-19,DE
+31,"Shiseido","Shiseido",luxe,2017-04-23,JP
+32,"SK-II","P&G",luxe,2016-03-24,JP
+33,"Sulwhasoo","Amorepacific",luxe,2024-04-24,KR
+34,"Laneige","Amorepacific",mass-premium,2010-05-15,KR
+35,"Kiehl's","L'Oreal",mass-premium,2016-08-25,US
+36,"Fresh","LVMH",mass-premium,2016-11-15,US
+37,"Bumble and bumble","Estee Lauder",mass-premium,2008-07-26,US
+38,"Moroccanoil","Independant",mass-premium,2018-02-26,IL
+39,"Dyson","Dyson",luxe,2003-08-09,UK
+40,"ghd","Coty",mass-premium,2016-10-20,UK
