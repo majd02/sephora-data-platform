@@ -1,17 +1,41 @@
 package com.sephora.data.model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public class Product {
+
+    @JsonProperty("id")
     private int id;
+
+    @JsonProperty("nom")
     private String nom;
+
+    @JsonProperty("brand_id")
     private int brandId;
+
+    @JsonProperty("categorie")
     private String categorie;
+
+    @JsonProperty("sous_categorie")
     private String sousCategorie;
+
+    @JsonProperty("prix")
     private double prix;
+
+    @JsonProperty("date_lancement")
     private String dateLancement; // format YYYY-MM-DD
+
+    @JsonProperty("is_vegan")
     private boolean isVegan;
+
+    @JsonProperty("is_bio")
     private boolean isBio;
 
-    // Constructeur avec tous les paramètres
+    // 1. Constructeur vide : INDISPENSABLE pour Jackson
+    public Product() {
+    }
+
+    // 2. Constructeur avec tous les paramètres (pour ton usage manuel)
     public Product(int id, String nom, int brandId, String categorie, String sousCategorie,
                    double prix, String dateLancement, boolean isVegan, boolean isBio) {
         this.id = id;
@@ -25,7 +49,7 @@ public class Product {
         this.isBio = isBio;
     }
 
-    // Getters
+    // Getters (nécessaires pour la sérialisation Java -> JSON)
     public int getId() { return id; }
     public String getNom() { return nom; }
     public int getBrandId() { return brandId; }
