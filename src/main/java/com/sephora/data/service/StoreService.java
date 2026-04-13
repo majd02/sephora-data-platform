@@ -3,10 +3,8 @@ package com.sephora.data.service;
 import com.sephora.data.model.Store;
 
 import java.io.*;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class StoreService {
     /**
@@ -60,55 +58,54 @@ public class StoreService {
         return (field == null) ? "" : field.replace("\"", "").trim();
     }
     /**
-     * Compte le nombre de magasins par pays sans utiliser les Streams.
+     * 1. Compte le nombre de magasins par pays
      */
-    public Map<String, Integer> countStoresByCountry(List<Store> stores) {
-        // 1. On crée une Map vide pour stocker nos résultats
-        Map<String, Integer> paysCompteur = new HashMap<>();
-
-        // 2. On parcourt la liste des magasins un par un
-        for (Store store : stores) {
-            String pays = store.getPays();
-
-            // 3. On vérifie si le pays est déjà dans la Map
-            if (paysCompteur.containsKey(pays)) {
-                // Si oui, on récupère la valeur actuelle et on ajoute 1
-                int nombreActuel = paysCompteur.get(pays);
-                paysCompteur.put(pays, nombreActuel + 1);
-            } else {
-                // Si non, c'est le premier magasin de ce pays qu'on trouve
-                paysCompteur.put(pays, 1);
-            }
-        }
-
-        return paysCompteur;
+    public Map<String, Long> countStoresByCountry(List<Store> stores) {
+        return stores.stream()
+                .collect(Collectors.groupingBy(Store::getPays, Collectors.counting()));
     }
+
     /**
-     * charge le magasin le plus ancien.
-     * @return objet Store
+     * 2. Trouve le magasin le plus ancien
      */
     public Store findOldestStore(List<Store> stores) {
-        // Si la liste est vide, on ne peut rien trouver
-        if (stores == null || stores.isEmpty()) {
-            return null;
-        }
-
-        // Initialiser le "champion" (le plus ancien actuel)
-        Store oldest = stores.get(0);
-
-        // Parcourir le reste de la liste
-        for (int i = 1; i < stores.size(); i++) {
-            Store current = stores.get(i);
-
-            // Comparer avec compareTo()
-            if (current.getDateOuverture().compareTo(oldest.getDateOuverture())<0){
-
-                oldest = current;
-            }
-        }
-
-        return oldest;
+        return stores.stream()
+                .min(Comparator.comparing(Store::getDateOuverture))
+                .orElse(null);
     }
+
+    /**
+     * 3. Top 5 des régions par nombre de magasins
+     */
+    public List<Map.Entry<String, Long>> getTop5Regions(List<Store> stores) {
+        return stores.stream()
+                .collect(Collectors.groupingBy(Store::getRegion, Collectors.counting()))
+                .entrySet()
+                .stream()
+                .sorted(Map.Entry.<String, Long>comparingByValue().reversed())
+                .limit(5)
+                .collect(Collectors.toList());
+    }
+
+    /**
+     * 4. Surface totale par pays
+     */
+    public Map<String, Integer> getTotalSurfaceByCountry(List<Store> stores) {
+        return stores.stream()
+                .collect(Collectors.groupingBy(Store::getPays,
+                        Collectors.summingInt(Store::getSurface)));
+    }
+
+    /**
+     * 5. Liste des magasins en RENOVATION triés par surface décroissante
+     */
+    public List<Store> getRenovatingStoresSortedBySurface(List<Store> stores) {
+        return stores.stream()
+                .filter(s -> "RENOVATION".equalsIgnoreCase(s.getStatut()))
+                .sorted(Comparator.comparingInt(Store::getSurface).reversed())
+                .collect(Collectors.toList());
+    }
+
     /**
      * charge les magasins après année donnée.
      * @param stores liste des magasins,
@@ -150,15 +147,15 @@ public class StoreService {
 
             // 2. Statistiques par pays
             writer.println("--- RÉPARTITION PAR PAYS ---");
-            Map<String, Integer> countries = countStoresByCountry(stores);
-            for (Map.Entry<String, Integer> entry : countries.entrySet()) {
+            Map<String, Long> countries = countStoresByCountry(stores);
+            for (Map.Entry<String, Long> entry : countries.entrySet()) {
                 writer.println("- " + entry.getKey() + " : " + entry.getValue() + " magasin(s)");
             }
 
-            System.out.println("✅ Rapport généré avec succès dans : " + fileName);
+            System.out.println("Rapport généré avec succès dans : " + fileName);
 
         } catch (IOException e) {
-            System.err.println("❌ Erreur lors de la génération du rapport : " + e.getMessage());
+            System.err.println("Erreur lors de la génération du rapport : " + e.getMessage());
         }
     }
 }
