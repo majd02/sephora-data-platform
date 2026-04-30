@@ -1,0 +1,19 @@
+version: '3.8'
+
+services:
+  sephora-pipeline:
+    build: .
+    image: sephora-data-platform:latest
+    container_name: sephora_pipeline_container
+    volumes:
+      # Montage des données locales si nécessaire
+      - ./data:/data
+      # IMPORTANT : Monter tes credentials GCP pour que Docker les voit
+      - ~/.config/gcloud:/root/.config/gcloud
+    environment:
+      # Pointer vers le chemin interne du container pour les credentials
+      - GOOGLE_APPLICATION_CREDENTIALS=/root/.config/gcloud/application_default_credentials.json
+    command: >
+      --project=project-e8660359-eb66-4c3c-8c3
+      --runner=DirectRunner
+      --tempLocation=gs://sephora-raw-data-project-e8660359-eb66-4c3c-8c3-dev/temp
