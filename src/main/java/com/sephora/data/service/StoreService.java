@@ -1,5 +1,7 @@
 package com.sephora.data.service;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import com.sephora.data.model.Store;
 
 import java.io.*;
@@ -158,4 +160,18 @@ public class StoreService {
             System.err.println("Erreur lors de la génération du rapport : " + e.getMessage());
         }
     }
+    public void exportStoresToJson(String filePath, List<Store> stores) {
+        ObjectMapper mapper = new ObjectMapper();
+
+        // On active l'indentation pour que le JSON soit lisible par un humain
+        mapper.enable(SerializationFeature.INDENT_OUTPUT);
+
+        try {
+            mapper.writeValue(new File(filePath), stores);
+            System.out.println("Données consolidées écrites dans : " + filePath);
+        } catch (IOException e) {
+            System.err.println("Erreur lors de l'écriture du JSON : " + e.getMessage());
+        }
+    }
+
 }
