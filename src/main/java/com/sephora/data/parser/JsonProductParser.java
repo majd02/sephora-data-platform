@@ -8,8 +8,9 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
-public class JsonProductParser {
+public class JsonProductParser implements SephoraFileParser<Product> {
 
+    @Override
     public List<Product> parse(String filePath) throws IOException {
         ObjectMapper mapper = new ObjectMapper();
 
