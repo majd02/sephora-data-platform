@@ -170,10 +170,11 @@ public class ProductIngestionPipeline {
                 new TableFieldSchema().setName("product_id").setType("STRING"),
                 new TableFieldSchema().setName("store_id").setType("STRING"),
                 new TableFieldSchema().setName("quantite").setType("INTEGER"),
-                new TableFieldSchema().setName("date_vente").setType("STRING")));
+                new TableFieldSchema().setName("date_vente").setType("STRING"),
+                new TableFieldSchema().setName("CA_TTC").setType("FLOAT")
+        ));
 
-        pipeline.apply("ReadSalesDelta", TextIO.read().from(bucket + "deltas/sales_delta.json"))
-                .apply("ParseSales", ParDo.of(new SalesDeltaDoFn()))
+        pipeline.apply("ReadSalesDelta", TextIO.read().from(bucket + "full/sales_full.json"))                .apply("ParseSales", ParDo.of(new SalesDeltaDoFn()))
                 .apply("WriteToStaging", BigQueryIO.writeTableRows()
                         .to(projectId + ":sephora_raw.sales_staging") // <--- Table tampon
                         .withSchema(salesSchema)
@@ -191,28 +192,23 @@ public class ProductIngestionPipeline {
                 "WHEN NOT MATCHED THEN INSERT (sale_id, product_id, store_id, quantite, date_vente) " +
                 "VALUES(sale_id, product_id, store_id, quantite, date_vente)";
 
- 
+
     }
     public static class SalesDeltaDoFn extends DoFn<String, TableRow> {
         @ProcessElement
         public void processElement(@Element String json, OutputReceiver<TableRow> out) {
-            // On vérifie que la ligne contient une clé du JSON (ex: "product_id")
             if (json.contains("product_id")) {
-                try {
-                    JSONObject obj = new JSONObject(json);
+                JSONObject obj = new JSONObject(json);
 
-                    // On crée la ligne pour BigQuery en utilisant les clés EXACTES du JSON
-                    TableRow row = new TableRow()
-                            .set("sale_id", String.valueOf(obj.getInt("id")))         // "id" dans le JSON
-                            .set("product_id", String.valueOf(obj.getInt("product_id")))
-                            .set("store_id", String.valueOf(obj.getInt("store_id")))
-                            .set("quantite", obj.getInt("quantite"))
-                            .set("date_vente", obj.getString("date"));                // "date" dans le JSON
+                TableRow row = new TableRow()
+                        .set("sale_id", String.valueOf(obj.getInt("id")))
+                        .set("product_id", String.valueOf(obj.getInt("product_id")))
+                        .set("store_id", String.valueOf(obj.getInt("store_id")))
+                        .set("quantite", obj.getInt("quantite"))
+                        .set("date_vente", obj.getString("date"))
+                        .set("CA_TTC", obj.get("CA_TTC").toString());
 
-                    out.output(row);
-                } catch (Exception e) {
-                    System.err.println("Erreur sur la ligne : " + json.trim());
-                }
+                out.output(row);
             }
         }
     }
