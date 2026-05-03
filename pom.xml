@@ -12,7 +12,9 @@
         <maven.compiler.source>11</maven.compiler.source>
         <maven.compiler.target>11</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <beam.version>2.52.0</beam.version>
     </properties>
+
     <dependencies>
         <!-- Pour la manipulation du JSON -->
         <dependency>
@@ -28,27 +30,43 @@
             <version>5.10.1</version>
             <scope>test</scope>
         </dependency>
+
+        <!-- Apache Beam Core -->
         <dependency>
             <groupId>org.apache.beam</groupId>
             <artifactId>beam-sdks-java-core</artifactId>
-            <version>2.52.0</version>
+            <version>${beam.version}</version>
         </dependency>
+
+        <!-- Direct Runner (pour les tests locaux) -->
         <dependency>
             <groupId>org.apache.beam</groupId>
             <artifactId>beam-runners-direct-java</artifactId>
-            <version>2.52.0</version>
+            <version>${beam.version}</version>
         </dependency>
+
+        <!-- Google Cloud Platform IO -->
         <dependency>
             <groupId>org.apache.beam</groupId>
             <artifactId>beam-sdks-java-io-google-cloud-platform</artifactId>
-            <version>2.52.0</version>
+            <version>${beam.version}</version>
         </dependency>
+
+        <!-- Dataflow Runner : LA CORRECTION EST ICI -->
+        <dependency>
+            <groupId>org.apache.beam</groupId>
+            <artifactId>beam-runners-google-cloud-dataflow-java</artifactId>
+            <version>${beam.version}</version>
+            <scope>runtime</scope>
+        </dependency>
+
         <dependency>
             <groupId>org.json</groupId>
             <artifactId>json</artifactId>
             <version>20231013</version>
         </dependency>
     </dependencies>
+
     <build>
         <plugins>
             <plugin>
@@ -59,6 +77,18 @@
                     <execution>
                         <phase>package</phase>
                         <goals><goal>shade</goal></goals>
+                        <configuration>
+                            <filters>
+                                <filter>
+                                    <artifact>*:*</artifact>
+                                    <excludes>
+                                        <exclude>META-INF/*.SF</exclude>
+                                        <exclude>META-INF/*.DSA</exclude>
+                                        <exclude>META-INF/*.RSA</exclude>
+                                    </excludes>
+                                </filter>
+                            </filters>
+                        </configuration>
                     </execution>
                 </executions>
             </plugin>
